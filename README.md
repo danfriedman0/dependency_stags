@@ -15,6 +15,8 @@ The extractor expects a file or list of files in CoNLL-09 format, but any CoNLL 
 ```
 so that the first element in each tuple (the column index) matches the column index in your data.
 
+You also need to edit `arg_list` in `get_model2_stag`, which lists the arguments that are considered to be required for forming model2 supertags. According to Ouchi et al., these are SUBJ (subject), OBJ (object), PRD (predicative complement), and VC (verb chain). You need to change this to match your dependency formalism. 
+
 ## Supertag models
 
 This code extracts supertags models 1 and 2 from Outhi et al. (2014) and also the model from Foth et al. (2006), which is numbered here as model 0. See those papers for details.

@@ -13,11 +13,14 @@ def conll_line_to_dict(line):
     `line` should be a string.
     ConLL-09:
         0:ID    1:FORM   2:LEMMA   3:PLEMMA    4:POS        5:PPOS
-        6:FEAT  7:PFEAT  8:HEAD    9:PHEAD     10:deprel     11:PDEPREL
+        6:FEAT  7:PFEAT  8:HEAD    9:PHEAD     10:DEPREL     11:PDEPREL
         12:FILLPRED      13:PRED   14:APRED1   15:APRED2    ...
     '''
     fields = [(0, 'idx', int), (4, 'pos', str),
-              (8, 'head', int), (10, 'deprel', str)]    
+              (8, 'head', int), (10, 'deprel', str)]
+    # fields = [(0, 'idx', int), (3, 'pos', str),
+    #           (6, 'head', int), (7, 'deprel', str)]
+    
     parts = line.split('\t')
     d = {}
     for idx, field, dtype in fields:
@@ -69,6 +72,10 @@ def get_model2_stag(word, dep_table):
     # with their obligatory arguments (any argument labeled SBJ, OBJ, PRD,
     # or VC). If a verb has only non-obligatory arguments, the supertag
     # just indicates the direction, like in model1.
+    
+    # arg_list = ['SBJ', 'OBJ', 'PRD', 'VC']
+    arg_list = ['nsubj', 'csubj', 'dobj', 'iobj', 'ccomp', 'xcomp']
+    
     if word['pos'][0] != 'V':
         return get_model1_stag(word, dep_table)
 
@@ -76,7 +83,7 @@ def get_model2_stag(word, dep_table):
     if word['deprel'] != 'ROOT':
         head += '/R' if word['head'] > word['idx'] else '/L'
         
-    arg_list = ['SBJ', 'OBJ', 'PRD', 'VC']
+
     l_deps = [w['deprel'] + '/L' for w in dep_table[word['idx']]['L']
               if w['deprel'] in arg_list]
     r_deps = [w['deprel'] + '/R' for w in dep_table[word['idx']]['R']
